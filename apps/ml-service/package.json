@@ -1,0 +1,12 @@
+{
+    "name": "@fashiondeck/ml-service",
+    "version": "1.0.0",
+    "private": true,
+    "description": "FashionDeck FastAPI ML microservice (Python)",
+    "scripts": {
+        "dev": "echo 'Python service - use: uvicorn app.main:app --reload'",
+        "build": "echo 'Python service - no build step required'",
+        "lint": "echo 'Python service - use: pylint app/'",
+        "test": "echo 'Python service - use: pytest'"
+    }
+}
