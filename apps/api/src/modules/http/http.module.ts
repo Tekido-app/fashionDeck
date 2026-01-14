@@ -19,7 +19,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         
         // Retry configuration
         retries: 3,
-        retryDelay: (retryCount) => {
+        retryDelay: (retryCount: number) => {
           return retryCount * 1000; // Exponential backoff
         },
       }),

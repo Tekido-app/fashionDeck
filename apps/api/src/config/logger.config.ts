@@ -11,7 +11,13 @@ import * as winston from 'winston';
 const { combine, timestamp, printf, colorize, json } = winston.format;
 
 // Custom format for development (human-readable)
-const devFormat = printf(({ level, message, timestamp, context, ...metadata }) => {
+const devFormat = printf(({ level, message, timestamp, context, ...metadata }: {
+  level: string;
+  message: string;
+  timestamp: string;
+  context?: string;
+  [key: string]: any;
+}) => {
   let msg = `${timestamp} [${context || 'Application'}] ${level}: ${message}`;
   
   if (Object.keys(metadata).length > 0) {
