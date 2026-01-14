@@ -187,17 +187,17 @@
   - [x] Verify affiliate links are valid
   - [x] Check total price within budget (+10% tolerance)
 
-#### 3.2.4 ML Communication Module (`/modules/ml`)
+#### 3.2.4 ML Communication Module (`/modules/ml`) ✅
 
-- [ ] Create `MLServiceClient`
-  - [ ] HTTP client for FastAPI ML service
-  - [ ] POST `/parse` - prompt parsing
-  - [ ] POST `/plan` - outfit schema planning
-  - [ ] POST `/score` - embedding scoring
-  - [ ] POST `/rank` - LLM coherence ranking
-- [ ] Add timeout configuration (5 seconds per call)
-- [ ] Add retry logic for transient failures
-- [ ] Add circuit breaker pattern (fail fast if ML service down)
+- [x] Create `MLServiceClient`
+  - [x] HTTP client for FastAPI ML service
+  - [x] POST `/parse` - prompt parsing
+  - [x] POST `/plan` - outfit schema planning
+  - [x] POST `/score` - embedding scoring
+  - [x] POST `/rank` - LLM coherence ranking
+- [x] Add timeout configuration (5 seconds per call)
+- [x] Add retry logic for transient failures
+- [x] Add circuit breaker pattern (fail fast if ML service down)
 
 ### 3.3 API Documentation
 

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 import { QueryController } from './query.controller';
+import { MLServiceController } from './ml-service.controller';
 import { QueryService } from './query.service';
 import { MLServiceClient } from './ml-service.client';
 import { RateLimitGuard } from './guards/rate-limit.guard';
@@ -15,7 +16,7 @@ import { OutfitModule } from '../outfit/outfit.module';
     MarketplaceModule,
     OutfitModule,
   ],
-  controllers: [QueryController],
+  controllers: [QueryController, MLServiceController],
   providers: [
     QueryService,
     MLServiceClient,

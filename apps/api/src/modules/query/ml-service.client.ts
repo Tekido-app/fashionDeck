@@ -3,18 +3,41 @@
  * 
  * Handles communication with the FastAPI ML service for:
  * - Prompt parsing (GPT-4o-mini)
- * - Outfit scoring (Claude 3 Haiku)
- * - Embedding generation (CLIP)
+ * - Outfit planning
+ * - Embedding scoring (CLIP)
+ * - Outfit ranking (Claude 3 Haiku)
+ * 
+ * Features:
+ * - Circuit breaker pattern for fault tolerance
+ * - Automatic retries with exponential backoff
+ * - Fallback responses for graceful degradation
  */
 
 import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
-import { firstValueFrom, timeout } from 'rxjs';
-import { ParsedPrompt } from '@fashiondeck/types';
+import { firstValueFrom, timeout, retry, timer } from 'rxjs';
+import { ParsedPrompt, Outfit } from '@fashiondeck/types';
+import { CircuitBreaker, CircuitState } from './circuit-breaker';
 
 export interface ParsePromptResponse {
   parsed: ParsedPrompt;
+  processingTime: number;
+}
+
+export interface PlanOutfitResponse {
+  categories: string[];
+  reasoning: string;
+}
+
+export interface ScoreEmbeddingsResponse {
+  scores: number[];
+  processingTime: number;
+}
+
+export interface RankOutfitsResponse {
+  scores: number[];
+  rankings: number[];
   processingTime: number;
 }
 
@@ -37,6 +60,8 @@ export class MLServiceClient {
   private readonly logger = new Logger(MLServiceClient.name);
   private readonly mlServiceUrl: string;
   private readonly mlServiceTimeout: number;
+  private readonly maxRetries: number;
+  private readonly circuitBreaker: CircuitBreaker;
 
   constructor(
     private readonly httpService: HttpService,
@@ -44,6 +69,15 @@ export class MLServiceClient {
   ) {
     this.mlServiceUrl = this.configService.get<string>('ML_SERVICE_URL', 'http://localhost:8000');
     this.mlServiceTimeout = this.configService.get<number>('ML_SERVICE_TIMEOUT', 5000);
+    this.maxRetries = 3;
+
+    // Initialize circuit breaker
+    // 5 failures in 60 seconds opens circuit, reset after 30 seconds
+    this.circuitBreaker = new CircuitBreaker({
+      failureThreshold: 5,
+      resetTimeout: 30000, // 30 seconds
+      monitoringWindow: 60000, // 1 minute
+    });
   }
 
   /**
@@ -52,27 +86,124 @@ export class MLServiceClient {
   async parsePrompt(prompt: string): Promise<ParsedPrompt> {
     const startTime = Date.now();
 
+    // Check circuit breaker
+    if (!this.circuitBreaker.canExecute()) {
+      this.logger.warn('Circuit breaker OPEN, using fallback prompt parsing');
+      return this.createFallbackParsedPrompt(prompt);
+    }
+
     try {
       this.logger.debug(`Parsing prompt: "${prompt}"`);
 
-      const response = await firstValueFrom(
-        this.httpService
-          .post<ParsePromptResponse>(`${this.mlServiceUrl}/parse-prompt`, {
-            prompt,
-          })
-          .pipe(timeout(this.mlServiceTimeout))
+      const response = await this.executeWithRetry<ParsePromptResponse>(
+        () => this.httpService.post(`${this.mlServiceUrl}/parse-prompt`, { prompt }),
+        'parsePrompt'
       );
 
       const processingTime = Date.now() - startTime;
       this.logger.log(`Prompt parsed in ${processingTime}ms`);
 
+      this.circuitBreaker.recordSuccess();
       return response.data.parsed;
+
     } catch (error) {
       const processingTime = Date.now() - startTime;
       this.logger.error(`Failed to parse prompt after ${processingTime}ms:`, error.message);
 
+      this.circuitBreaker.recordFailure();
+
       // Fallback: Return basic parsed prompt
       return this.createFallbackParsedPrompt(prompt);
+    }
+  }
+
+  /**
+   * Plan outfit categories based on query
+   */
+  async planOutfit(parsedPrompt: ParsedPrompt): Promise<string[]> {
+    // Check circuit breaker
+    if (!this.circuitBreaker.canExecute()) {
+      this.logger.warn('Circuit breaker OPEN, using fallback outfit planning');
+      return this.createFallbackOutfitPlan(parsedPrompt);
+    }
+
+    try {
+      this.logger.debug('Planning outfit categories');
+
+      const response = await this.executeWithRetry<PlanOutfitResponse>(
+        () => this.httpService.post(`${this.mlServiceUrl}/plan-outfit`, { query: parsedPrompt }),
+        'planOutfit'
+      );
+
+      this.circuitBreaker.recordSuccess();
+      return response.data.categories;
+
+    } catch (error) {
+      this.logger.error('Failed to plan outfit:', error.message);
+      this.circuitBreaker.recordFailure();
+
+      // Fallback
+      return this.createFallbackOutfitPlan(parsedPrompt);
+    }
+  }
+
+  /**
+   * Score outfits using CLIP embeddings
+   */
+  async scoreEmbeddings(outfits: Outfit[]): Promise<number[]> {
+    // Check circuit breaker
+    if (!this.circuitBreaker.canExecute()) {
+      this.logger.warn('Circuit breaker OPEN, using fallback embedding scores');
+      return outfits.map(() => 0.5);
+    }
+
+    try {
+      this.logger.debug(`Scoring ${outfits.length} outfits with embeddings`);
+
+      const response = await this.executeWithRetry<ScoreEmbeddingsResponse>(
+        () => this.httpService.post(`${this.mlServiceUrl}/score-embeddings`, { outfits }),
+        'scoreEmbeddings'
+      );
+
+      this.circuitBreaker.recordSuccess();
+      return response.data.scores;
+
+    } catch (error) {
+      this.logger.error('Failed to score embeddings:', error.message);
+      this.circuitBreaker.recordFailure();
+
+      // Fallback: Return neutral scores
+      return outfits.map(() => 0.5);
+    }
+  }
+
+  /**
+   * Rank outfits using LLM coherence scoring
+   */
+  async rankOutfits(outfits: Outfit[]): Promise<number[]> {
+    // Check circuit breaker
+    if (!this.circuitBreaker.canExecute()) {
+      this.logger.warn('Circuit breaker OPEN, using fallback ranking');
+      return outfits.map((_, index) => index);
+    }
+
+    try {
+      this.logger.debug(`Ranking ${outfits.length} outfits with LLM`);
+
+      const response = await this.executeWithRetry<RankOutfitsResponse>(
+        () => this.httpService.post(`${this.mlServiceUrl}/rank-outfits`, { outfits }),
+        'rankOutfits'
+      );
+
+      this.circuitBreaker.recordSuccess();
+      return response.data.rankings;
+
+    } catch (error) {
+      this.logger.error('Failed to rank outfits:', error.message);
+      this.circuitBreaker.recordFailure();
+
+      // Fallback: Return sequential rankings
+      return outfits.map((_, index) => index);
     }
   }
 
@@ -82,22 +213,31 @@ export class MLServiceClient {
   async scoreOutfit(request: ScoreOutfitRequest): Promise<number> {
     const startTime = Date.now();
 
+    // Check circuit breaker
+    if (!this.circuitBreaker.canExecute()) {
+      this.logger.warn('Circuit breaker OPEN, using fallback outfit scoring');
+      return 0.5;
+    }
+
     try {
       this.logger.debug(`Scoring outfit with ${request.items.length} items`);
 
-      const response = await firstValueFrom(
-        this.httpService
-          .post<ScoreOutfitResponse>(`${this.mlServiceUrl}/score-outfit`, request)
-          .pipe(timeout(this.mlServiceTimeout))
+      const response = await this.executeWithRetry<ScoreOutfitResponse>(
+        () => this.httpService.post(`${this.mlServiceUrl}/score-outfit`, request),
+        'scoreOutfit'
       );
 
       const processingTime = Date.now() - startTime;
       this.logger.log(`Outfit scored in ${processingTime}ms: ${response.data.score}`);
 
+      this.circuitBreaker.recordSuccess();
       return response.data.score;
+
     } catch (error) {
       const processingTime = Date.now() - startTime;
       this.logger.warn(`Failed to score outfit after ${processingTime}ms:`, error.message);
+
+      this.circuitBreaker.recordFailure();
 
       // Fallback: Return neutral score
       return 0.5;
@@ -108,19 +248,24 @@ export class MLServiceClient {
    * Generate embedding for product
    */
   async generateEmbedding(text: string, imageUrl?: string): Promise<number[]> {
+    // Check circuit breaker
+    if (!this.circuitBreaker.canExecute()) {
+      this.logger.warn('Circuit breaker OPEN, skipping embedding generation');
+      throw new Error('ML service unavailable');
+    }
+
     try {
-      const response = await firstValueFrom(
-        this.httpService
-          .post<{ embedding: number[] }>(`${this.mlServiceUrl}/generate-embedding`, {
-            text,
-            imageUrl,
-          })
-          .pipe(timeout(this.mlServiceTimeout))
+      const response = await this.executeWithRetry<{ embedding: number[] }>(
+        () => this.httpService.post(`${this.mlServiceUrl}/generate-embedding`, { text, imageUrl }),
+        'generateEmbedding'
       );
 
+      this.circuitBreaker.recordSuccess();
       return response.data.embedding;
+
     } catch (error) {
       this.logger.error('Failed to generate embedding:', error.message);
+      this.circuitBreaker.recordFailure();
       throw error;
     }
   }
@@ -141,6 +286,39 @@ export class MLServiceClient {
       this.logger.warn('ML service health check failed:', error.message);
       return false;
     }
+  }
+
+  /**
+   * Get circuit breaker status
+   */
+  getCircuitBreakerStatus() {
+    return {
+      state: this.circuitBreaker.getState(),
+      failureCount: this.circuitBreaker.getFailureCount(),
+      isOpen: this.circuitBreaker.getState() === CircuitState.OPEN,
+    };
+  }
+
+  /**
+   * Execute HTTP request with retry logic
+   */
+  private async executeWithRetry<T>(
+    requestFn: () => any,
+    operation: string
+  ): Promise<{ data: T }> {
+    return await firstValueFrom(
+      requestFn().pipe(
+        timeout(this.mlServiceTimeout),
+        retry({
+          count: this.maxRetries,
+          delay: (error, retryCount) => {
+            this.logger.debug(`Retry ${retryCount}/${this.maxRetries} for ${operation}`);
+            // Exponential backoff: 1s, 2s, 4s
+            return timer(Math.pow(2, retryCount - 1) * 1000);
+          },
+        })
+      )
+    );
   }
 
   /**
@@ -181,5 +359,13 @@ export class MLServiceClient {
       gender,
       categories,
     };
+  }
+
+  /**
+   * Create fallback outfit plan
+   */
+  private createFallbackOutfitPlan(parsedPrompt: ParsedPrompt): string[] {
+    this.logger.warn('Using fallback outfit planning');
+    return parsedPrompt.categories || ['top', 'bottom'];
   }
 }
