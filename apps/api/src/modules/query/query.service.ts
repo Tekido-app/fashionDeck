@@ -15,6 +15,7 @@ import { DataSource } from 'typeorm';
 import { MLServiceClient } from './ml-service.client';
 import { CacheService } from '../redis/cache.service';
 import { MarketplaceService } from '../marketplace/marketplace.service';
+import { OutfitService } from '../outfit/outfit.service';
 import { QueryResponseDto } from './dto/query-response.dto';
 import { Outfit, ParsedPrompt, ProductItem } from '@fashiondeck/types';
 import { NoResultsError } from '@fashiondeck/utils';
@@ -27,6 +28,7 @@ export class QueryService {
     private readonly mlServiceClient: MLServiceClient,
     private readonly cacheService: CacheService,
     private readonly marketplaceService: MarketplaceService,
+    private readonly outfitService: OutfitService,
     @InjectDataSource()
     private readonly dataSource: DataSource,
   ) {}
@@ -61,16 +63,16 @@ export class QueryService {
       const parsedPrompt = await this.mlServiceClient.parsePrompt(prompt);
       this.logger.debug(`[${queryId}] Parsed prompt:`, parsedPrompt);
 
-      // Step 3: Fetch products (placeholder - will be implemented with marketplace adapters)
-      const outfits = await this.assembleOutfits(parsedPrompt, queryId);
+      // Step 3: Fetch products from marketplaces
+      const products = await this.marketplaceService.searchAll(parsedPrompt);
+      this.logger.debug(`[${queryId}] Found ${products.length} products from marketplaces`);
 
-      // Step 4: Score outfits (if ML service is available)
-      const scoredOutfits = await this.scoreOutfits(outfits, parsedPrompt.aesthetic, queryId);
+      // Step 4: Assemble outfits
+      const outfits = await this.outfitService.assembleOutfits(products, parsedPrompt);
+      this.logger.debug(`[${queryId}] Assembled ${outfits.length} outfits`);
 
-      // Step 5: Sort by score and limit results
-      const topOutfits = scoredOutfits
-        .sort((a, b) => (b.score || 0) - (a.score || 0))
-        .slice(0, 6); // Return top 6 outfits
+      // Step 5: Take top outfits (already sorted by score)
+      const topOutfits = outfits.slice(0, 6);
 
       const processingTime = Date.now() - startTime;
 
@@ -123,26 +125,11 @@ export class QueryService {
 
   /**
    * Assemble outfits from products
-   * TODO: Implement with marketplace adapters
+   * DEPRECATED: Now handled by OutfitService
    */
   private async assembleOutfits(parsedPrompt: ParsedPrompt, queryId: string): Promise<Outfit[]> {
-    this.logger.debug(`[${queryId}] Assembling outfits for aesthetic: ${parsedPrompt.aesthetic}`);
-
-    // Placeholder: Return mock outfits for now
-    // This will be replaced with actual marketplace product fetching
-    const mockOutfits: Outfit[] = [
-      {
-        aesthetic: parsedPrompt.aesthetic,
-        totalPrice: 2500,
-        items: [],
-      },
-    ];
-
-    if (mockOutfits.length === 0) {
-      throw new NoResultsError('No outfits found matching your criteria');
-    }
-
-    return mockOutfits;
+    // This method is no longer used - kept for reference
+    return [];
   }
 
   /**

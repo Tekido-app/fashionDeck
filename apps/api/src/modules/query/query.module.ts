@@ -6,12 +6,14 @@ import { MLServiceClient } from './ml-service.client';
 import { RateLimitGuard } from './guards/rate-limit.guard';
 import { RedisModule } from '../redis/redis.module';
 import { MarketplaceModule } from '../marketplace/marketplace.module';
+import { OutfitModule } from '../outfit/outfit.module';
 
 @Module({
   imports: [
     HttpModule,
     RedisModule,
     MarketplaceModule,
+    OutfitModule,
   ],
   controllers: [QueryController],
   providers: [

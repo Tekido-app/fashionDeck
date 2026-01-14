@@ -10,6 +10,7 @@ import { HttpModule } from './modules/http/http.module';
 import { HealthModule } from './modules/health/health.module';
 import { QueryModule } from './modules/query/query.module';
 import { MarketplaceModule } from './modules/marketplace/marketplace.module';
+import { OutfitModule } from './modules/outfit/outfit.module';
 
 @Module({
   imports: [
@@ -35,9 +36,7 @@ import { MarketplaceModule } from './modules/marketplace/marketplace.module';
     HealthModule,
     QueryModule,
     MarketplaceModule,
-    
-    // TODO: Add more modules as they are implemented
-    // OutfitModule,
+    OutfitModule,
   ],
 })
 export class AppModule {}
