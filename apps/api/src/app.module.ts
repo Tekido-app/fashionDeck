@@ -1,9 +1,3 @@
-/**
- * App Module
- * 
- * Root module that imports all feature modules and configures the application.
- */
-
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { WinstonModule } from 'nest-winston';
@@ -14,6 +8,8 @@ import { RedisModule } from './modules/redis/redis.module';
 import { QueueModule } from './modules/queue/queue.module';
 import { HttpModule } from './modules/http/http.module';
 import { HealthModule } from './modules/health/health.module';
+import { QueryModule } from './modules/query/query.module';
+import { MarketplaceModule } from './modules/marketplace/marketplace.module';
 
 @Module({
   imports: [
@@ -37,12 +33,11 @@ import { HealthModule } from './modules/health/health.module';
 
     // Feature Modules
     HealthModule,
+    QueryModule,
+    MarketplaceModule,
     
     // TODO: Add more modules as they are implemented
-    // QueryModule,
-    // MarketplaceModule,
     // OutfitModule,
-    // MLModule,
   ],
 })
 export class AppModule {}

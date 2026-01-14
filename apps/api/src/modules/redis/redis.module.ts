@@ -1,14 +1,8 @@
-/**
- * Redis Module
- * 
- * Provides Redis caching functionality for the application.
- * Uses cache-manager with Redis store for distributed caching.
- */
-
 import { Module, Global } from '@nestjs/common';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-yet';
-import { redisConfig, getRedisUrl } from '../config/redis.config';
+import { redisConfig, getRedisUrl } from '../../config/redis.config';
+import { CacheService } from './cache.service';
 
 @Global()
 @Module({
@@ -33,6 +27,7 @@ import { redisConfig, getRedisUrl } from '../config/redis.config';
       },
     }),
   ],
-  exports: [CacheModule],
+  providers: [CacheService],
+  exports: [CacheModule, CacheService],
 })
 export class RedisModule {}

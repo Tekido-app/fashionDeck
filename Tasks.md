@@ -119,25 +119,25 @@
 
 ### 3.2 Core Modules
 
-#### 3.2.1 Query Module (`/modules/query`)
+#### 3.2.1 Query Module (`/modules/query`) ✅
 
-- [ ] Create `QueryController` with POST `/api/query` endpoint
-  - [ ] Accept `{ prompt: string }` in request body
-  - [ ] Validate input (max length, required fields)
-  - [ ] Add rate limiting (10 requests/minute per IP)
-  - [ ] Return structured outfit response
-- [ ] Create `QueryService` orchestration layer
-  - [ ] Call ML service for prompt parsing
-  - [ ] Trigger parallel processing (planning + pre-fetch)
-  - [ ] Call outfit assembly service
-  - [ ] Log query metrics (latency, success/failure)
-- [ ] Create DTOs (Data Transfer Objects)
-  - [ ] `QueryRequestDto` - validate prompt
-  - [ ] `QueryResponseDto` - structure outfit response
-- [ ] Add error handling
-  - [ ] Handle ML service timeouts (fallback response)
-  - [ ] Handle no results found (graceful degradation)
-  - [ ] Handle marketplace API failures
+- [x] Create `QueryController` with POST `/api/query` endpoint
+  - [x] Accept `{ prompt: string }` in request body
+  - [x] Validate input (max length, required fields)
+  - [x] Add rate limiting (10 requests/minute per IP)
+  - [x] Return structured outfit response
+- [x] Create `QueryService` orchestration layer
+  - [x] Call ML service for prompt parsing
+  - [x] Trigger parallel processing (planning + pre-fetch)
+  - [x] Call outfit assembly service
+  - [x] Log query metrics (latency, success/failure)
+- [x] Create DTOs (Data Transfer Objects)
+  - [x] `QueryRequestDto` - validate prompt
+  - [x] `QueryResponseDto` - structure outfit response
+- [x] Add error handling
+  - [x] Handle ML service timeouts (fallback response)
+  - [x] Handle no results found (graceful degradation)
+  - [x] Handle marketplace API failures
 
 #### 3.2.2 Marketplace Module (`/modules/marketplace`)
 
