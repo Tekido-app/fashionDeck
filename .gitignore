@@ -69,3 +69,6 @@ models/*.safetensors
 *.db
 *.sqlite
 *.sqlite3
+
+
+# MD files
