@@ -9,9 +9,9 @@ module.exports = {
     extend: {
       colors: {
         shadow: {
-          DEFAULT: "#1A1A19", // Darker for better contrast
+          DEFAULT: "#1A1A19",
           light: "#242423",
-          muted: "#575756", // Defined muted color instead of low opacity
+          muted: "#575756",
         },
         dust: {
           DEFAULT: "#CFDBD5",
@@ -19,20 +19,28 @@ module.exports = {
         },
         ivory: {
           DEFAULT: "#E8EDDF",
-          light: "#FBFBF9", // Cleaner off-white
+          light: "#FBFBF9",
         },
         tuscan: {
-          DEFAULT: "#E9BA31", // Slightly darker yellow for better contrast on white
+          DEFAULT: "#E9BA31",
           light: "#F5CB5C",
           dark: "#D4A316",
         },
         surface: {
-          50: "#FFFFFF", // Pure white for bento bricks
+          50: "#FFFFFF",
           100: "#FBFBF9",
           200: "#E8EDDF",
           300: "#CFDBD5",
           900: "#1A1A19",
           950: "#0A0A09",
+        },
+        // Editorial Palette
+        editorial: {
+          white: "#FAFAFA",
+          text: "#111111",
+          "text-muted": "#222222",
+          accent: "#D9C9A3",
+          divider: "#E8E8E8",
         },
       },
       fontFamily: {
