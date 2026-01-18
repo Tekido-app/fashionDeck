@@ -3,6 +3,8 @@ import { Inter, Outfit, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { DashboardLayout } from "@/components/layout/DashboardLayout";
+import { AuthProvider } from "@/context/AuthContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -42,12 +44,15 @@ export default function RootLayout({
           "min-height-screen bg-surface-50 font-sans antialiased selection:bg-tuscan/30 selection:text-shadow",
           inter.variable,
           outfit.variable,
-          cormorant.variable
+          cormorant.variable,
         )}
       >
-        <div className="relative flex min-h-screen flex-col">
-          <main className="flex-1">{children}</main>
-        </div>
+        <AuthProvider>
+          <div className="relative flex min-h-screen flex-col">
+            {/* <main className="flex-1">{children}</main> */}
+            <DashboardLayout>{children}</DashboardLayout>
+          </div>
+        </AuthProvider>
       </body>
     </html>
   );

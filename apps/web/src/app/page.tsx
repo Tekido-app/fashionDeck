@@ -77,8 +77,16 @@ export default function LandingPage() {
                 {[1, 2, 3].map((i) => (
                   <div
                     key={i}
-                    className="w-6 h-6 rounded-full bg-gray-200 border border-white"
-                  ></div>
+                    className="w-8 h-8 rounded-full border-2 border-white overflow-hidden bg-gray-200"
+                  >
+                    <Image
+                      src={`/avatar-${i}.png`}
+                      alt={`User ${i}`}
+                      width={32}
+                      height={32}
+                      className="object-cover"
+                    />
+                  </div>
                 ))}
               </div>
               <p>Trusted by 2,000+ early users</p>
