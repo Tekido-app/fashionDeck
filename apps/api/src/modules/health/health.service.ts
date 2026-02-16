@@ -8,14 +8,14 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 
-interface HealthCheck {
+export interface HealthCheck {
   name: string;
   status: 'healthy' | 'unhealthy';
   message?: string;
   responseTime?: number;
 }
 
-interface HealthStatus {
+export interface HealthStatus {
   isHealthy: boolean;
   checks: HealthCheck[];
 }

@@ -14,7 +14,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { CacheService } from '../redis/cache.service';
+import { CacheService } from '../../redis/cache.service';
 
 @Injectable()
 export class RateLimitGuard implements CanActivate {

@@ -55,7 +55,7 @@ export class FlipkartAdapter implements MarketplaceAdapter {
 
     } catch (error) {
       this.logger.error(`Flipkart search failed: ${error.message}`, error.stack);
-      throw new MarketplaceError(`Flipkart search failed: ${error.message}`);
+      throw new MarketplaceError(`Flipkart search failed: ${error.message}`, 'flipkart');
     }
   }
 
@@ -64,7 +64,7 @@ export class FlipkartAdapter implements MarketplaceAdapter {
    */
   async getDetails(productId: string): Promise<ProductDetail> {
     if (!this.isAvailable()) {
-      throw new MarketplaceError('Flipkart adapter not configured');
+      throw new MarketplaceError('Flipkart adapter not configured', 'flipkart');
     }
 
     try {
@@ -73,7 +73,7 @@ export class FlipkartAdapter implements MarketplaceAdapter {
       throw new Error('Not implemented');
     } catch (error) {
       this.logger.error(`Failed to get Flipkart product details for ${productId}: ${error.message}`, error.stack);
-      throw new MarketplaceError(`Failed to get product details: ${error.message}`);
+      throw new MarketplaceError(`Failed to get product details: ${error.message}`, 'flipkart');
     }
   }
 

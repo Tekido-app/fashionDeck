@@ -4,12 +4,12 @@
  * Handles outfit assembly, scoring, and ranking.
  */
 
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { OutfitService } from './outfit.service';
 import { QueryModule } from '../query/query.module';
 
 @Module({
-  imports: [QueryModule],
+  imports: [forwardRef(() => QueryModule)],
   providers: [OutfitService],
   exports: [OutfitService],
 })

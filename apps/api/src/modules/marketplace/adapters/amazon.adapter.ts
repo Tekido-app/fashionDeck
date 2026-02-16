@@ -53,7 +53,7 @@ export class AmazonAdapter implements MarketplaceAdapter {
 
     } catch (error) {
       this.logger.error(`Amazon search failed: ${error.message}`, error.stack);
-      throw new MarketplaceError(`Amazon search failed: ${error.message}`);
+      throw new MarketplaceError(`Amazon search failed: ${error.message}`, 'amazon');
     }
   }
 
@@ -62,7 +62,7 @@ export class AmazonAdapter implements MarketplaceAdapter {
    */
   async getDetails(productId: string): Promise<ProductDetail> {
     if (!this.isAvailable()) {
-      throw new MarketplaceError('Amazon adapter not configured');
+      throw new MarketplaceError('Amazon adapter not configured', 'amazon');
     }
 
     try {
@@ -70,7 +70,7 @@ export class AmazonAdapter implements MarketplaceAdapter {
       throw new Error('Not implemented');
     } catch (error) {
       this.logger.error(`Failed to get Amazon product details for ${productId}: ${error.message}`, error.stack);
-      throw new MarketplaceError(`Failed to get product details: ${error.message}`);
+      throw new MarketplaceError(`Failed to get product details: ${error.message}`, 'amazon');
     }
   }
 

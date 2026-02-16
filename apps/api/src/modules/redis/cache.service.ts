@@ -29,7 +29,8 @@ export class CacheService {
    */
   async getCachedProducts(queryHash: string): Promise<any[] | null> {
     const key = getCacheKey('product', queryHash);
-    return await this.cacheManager.get(key);
+    const result = await this.cacheManager.get<any[]>(key);
+    return result || null;
   }
 
   /**
@@ -95,7 +96,8 @@ export class CacheService {
    */
   async getCachedEmbedding(productId: string): Promise<number[] | null> {
     const key = getCacheKey('embedding', productId);
-    return await this.cacheManager.get(key);
+    const result = await this.cacheManager.get<number[]>(key);
+    return result || null;
   }
 
   /**
@@ -110,7 +112,8 @@ export class CacheService {
    * Generic get
    */
   async get<T>(key: string): Promise<T | null> {
-    return await this.cacheManager.get<T>(key);
+    const result = await this.cacheManager.get<T>(key);
+    return result || null;
   }
 
   /**

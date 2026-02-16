@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 import { QueryController } from './query.controller';
 import { MLServiceController } from './ml-service.controller';
@@ -14,7 +14,7 @@ import { OutfitModule } from '../outfit/outfit.module';
     HttpModule,
     RedisModule,
     MarketplaceModule,
-    OutfitModule,
+    forwardRef(() => OutfitModule),
   ],
   controllers: [QueryController, MLServiceController],
   providers: [

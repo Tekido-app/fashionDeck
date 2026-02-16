@@ -8,7 +8,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
-import { redisConfig } from '../../config/redis.config';
+import { redisConfig } from '../../../config/redis.config';
 
 export interface ProductRefreshJobData {
   marketplace: 'amazon' | 'flipkart';
