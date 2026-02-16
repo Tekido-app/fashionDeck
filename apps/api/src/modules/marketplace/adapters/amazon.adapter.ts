@@ -8,7 +8,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
-import { firstValueFrom, timeout } from 'rxjs';
 import { MarketplaceAdapter } from '../interfaces/marketplace-adapter.interface';
 import { ProductResult, ProductDetail, ParsedPrompt, ProductCategory } from '@fashiondeck/types';
 import { MarketplaceError } from '@fashiondeck/utils';
@@ -53,7 +52,7 @@ export class AmazonAdapter implements MarketplaceAdapter {
       return mockProducts;
 
     } catch (error) {
-      this.logger.error('Amazon search failed:', error.message);
+      this.logger.error(`Amazon search failed: ${error.message}`, error.stack);
       throw new MarketplaceError(`Amazon search failed: ${error.message}`);
     }
   }
@@ -70,7 +69,7 @@ export class AmazonAdapter implements MarketplaceAdapter {
       // TODO: Implement actual Amazon PA-API GetItems operation
       throw new Error('Not implemented');
     } catch (error) {
-      this.logger.error(`Failed to get Amazon product details for ${productId}:`, error.message);
+      this.logger.error(`Failed to get Amazon product details for ${productId}: ${error.message}`, error.stack);
       throw new MarketplaceError(`Failed to get product details: ${error.message}`);
     }
   }
@@ -78,7 +77,7 @@ export class AmazonAdapter implements MarketplaceAdapter {
   /**
    * Generate Amazon affiliate link
    */
-  generateAffiliateLink(productUrl: string, productId: string): string {
+  generateAffiliateLink(productUrl: string, _productId: string): string {
     if (!this.affiliateTag) {
       return productUrl;
     }

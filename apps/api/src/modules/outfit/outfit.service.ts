@@ -232,7 +232,7 @@ export class OutfitService {
   private mockEmbeddingScore(outfit: Outfit): number {
     // Simple heuristic: prefer outfits with more items and balanced prices
     const itemCount = outfit.items.length;
-    const avgPrice = outfit.totalPrice / itemCount;
+    // const avgPrice = outfit.totalPrice / itemCount;
     const priceVariance = this.calculatePriceVariance(outfit.items);
 
     // Normalize to 0-1 range

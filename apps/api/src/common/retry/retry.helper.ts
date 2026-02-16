@@ -21,7 +21,7 @@ export class RetryHelper {
     context: string = 'operation',
   ): Promise<T> {
     let lastError: Error;
-    let delay = config.initialDelay;
+    const delay = config.initialDelay;
 
     for (let attempt = 0; attempt <= config.maxRetries; attempt++) {
       try {

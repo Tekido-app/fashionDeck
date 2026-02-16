@@ -64,7 +64,7 @@ export class MarketplaceService {
       // Filter and process results
       const filteredProducts = this.filterProducts(allProducts, parsedPrompt);
       const deduplicatedProducts = this.deduplicateProducts(filteredProducts);
-      const sortedProducts = this.sortProducts(deduplicatedProducts, parsedPrompt);
+      const sortedProducts = this.sortProducts(deduplicatedProducts);
 
       const processingTime = Date.now() - startTime;
       this.logger.log(
@@ -146,7 +146,7 @@ export class MarketplaceService {
   /**
    * Sort products by price (lower is better)
    */
-  private sortProducts(products: ProductResult[], parsedPrompt: ParsedPrompt): ProductResult[] {
+  private sortProducts(products: ProductResult[]): ProductResult[] {
     return products.sort((a, b) => {
       // Sort by price (lower is better)
       return a.price - b.price;

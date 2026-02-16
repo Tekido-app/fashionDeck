@@ -8,7 +8,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
-import { firstValueFrom, timeout } from 'rxjs';
 import { MarketplaceAdapter } from '../interfaces/marketplace-adapter.interface';
 import { ProductResult, ProductDetail, ParsedPrompt, ProductCategory } from '@fashiondeck/types';
 import { MarketplaceError } from '@fashiondeck/utils';
@@ -43,7 +42,7 @@ export class FlipkartAdapter implements MarketplaceAdapter {
       this.logger.debug(`Searching Flipkart for: ${parsedPrompt.aesthetic} in ${category}`);
 
       // Build search keyword
-      const keyword = this.buildSearchKeyword(parsedPrompt, category);
+      // const keyword = this.buildSearchKeyword(parsedPrompt, category);
 
       // TODO: Implement actual Flipkart Affiliate API integration
       // Flipkart API endpoint: /affiliate/product/json
@@ -55,7 +54,7 @@ export class FlipkartAdapter implements MarketplaceAdapter {
       return mockProducts;
 
     } catch (error) {
-      this.logger.error('Flipkart search failed:', error.message);
+      this.logger.error(`Flipkart search failed: ${error.message}`, error.stack);
       throw new MarketplaceError(`Flipkart search failed: ${error.message}`);
     }
   }
@@ -73,7 +72,7 @@ export class FlipkartAdapter implements MarketplaceAdapter {
       // Endpoint: /affiliate/product/json with productId
       throw new Error('Not implemented');
     } catch (error) {
-      this.logger.error(`Failed to get Flipkart product details for ${productId}:`, error.message);
+      this.logger.error(`Failed to get Flipkart product details for ${productId}: ${error.message}`, error.stack);
       throw new MarketplaceError(`Failed to get product details: ${error.message}`);
     }
   }
@@ -81,7 +80,7 @@ export class FlipkartAdapter implements MarketplaceAdapter {
   /**
    * Generate Flipkart affiliate link
    */
-  generateAffiliateLink(productUrl: string, productId: string): string {
+  generateAffiliateLink(productUrl: string, _productId: string): string {
     if (!this.affiliateId) {
       return productUrl;
     }

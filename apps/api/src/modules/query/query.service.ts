@@ -17,8 +17,7 @@ import { CacheService } from '../redis/cache.service';
 import { MarketplaceService } from '../marketplace/marketplace.service';
 import { OutfitService } from '../outfit/outfit.service';
 import { QueryResponseDto } from './dto/query-response.dto';
-import { Outfit, ParsedPrompt, ProductItem } from '@fashiondeck/types';
-import { NoResultsError } from '@fashiondeck/utils';
+import { Outfit, ParsedPrompt } from '@fashiondeck/types';
 
 @Injectable()
 export class QueryService {
@@ -121,15 +120,6 @@ export class QueryService {
 
       throw error;
     }
-  }
-
-  /**
-   * Assemble outfits from products
-   * DEPRECATED: Now handled by OutfitService
-   */
-  private async assembleOutfits(parsedPrompt: ParsedPrompt, queryId: string): Promise<Outfit[]> {
-    // This method is no longer used - kept for reference
-    return [];
   }
 
   /**
