@@ -26,12 +26,11 @@ export function ProductCard({
       className="group block relative bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 h-full"
     >
       <div className="aspect-[3/4] relative overflow-hidden bg-gray-100">
-        <Image
+        {/* Using standard img tag temporarily to bypass Next.js proxy issues with external images */}
+        <img
           src={image}
           alt={title}
-          fill
-          className="object-cover object-top group-hover:scale-110 transition-transform duration-700 ease-out"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-700 ease-out"
         />
 
         {/* Store Badge */}
