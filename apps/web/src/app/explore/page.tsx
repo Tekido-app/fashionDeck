@@ -1,79 +1,72 @@
-import { ProductCard } from "@/components/ProductCard";
+"use client";
 
-// Mock data service
-const TRENDING_ITEMS = [
-  {
-    id: 1,
-    title: "Zara Flowy Midi Dress with Ruffles - Floral Print",
-    price: "₹2,490",
-    image:
-      "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    store: "Zara" as const,
-    rating: 4.5,
-  },
-  {
-    id: 2,
-    title: "Black Velvet Cocktail Dress with Slit",
-    price: "₹1,899",
-    image:
-      "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    store: "Amazon" as const,
-    rating: 4.2,
-  },
-  {
-    id: 3,
-    title: "Summer Breeze Cotton Sundress - White",
-    price: "₹999",
-    image:
-      "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    store: "Flipkart" as const,
-    rating: 3.8,
-  },
-  {
-    id: 4,
-    title: "Elegant Red Evening Gown - Satin Finish",
-    price: "₹4,500",
-    image:
-      "https://images.unsplash.com/photo-1566174053879-31528523f8ae?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    store: "Myntra" as const,
-    rating: 4.8,
-  },
-  {
-    id: 5,
-    title: "Casual Denim Shirt Dress",
-    price: "₹1,299",
-    image:
-      "https://images.unsplash.com/photo-1551163943-3f6a29e39426?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    store: "Amazon" as const,
-    rating: 4.0,
-  },
-  {
-    id: 6,
-    title: "Bohemian Maxi Dress - Earth Tones",
-    price: "₹2,100",
-    image:
-      "https://images.unsplash.com/photo-1495385794356-15371f348c31?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    store: "Flipkart" as const,
-    rating: 4.3,
-  },
-];
+import { useState } from "react";
+import { ProductCard } from "@/components/ProductCard";
+import { TRENDING_ITEMS } from "@/data/trending";
+
+const CATEGORIES = ["All", "Dresses", "Shirts", "Jeans", "T-Shirts"];
 
 export default function ExplorePage() {
+  const [activeCategory, setActiveCategory] = useState("All");
+
+  const filteredItems =
+    activeCategory === "All"
+      ? TRENDING_ITEMS
+      : TRENDING_ITEMS.filter((item) => item.category === activeCategory);
+
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-display font-bold text-shadow mb-2">
-          Explore Trending
-        </h1>
-        <p className="text-gray-500">
-          Curated picks from top retailers just for you.
-        </p>
+    <div className="space-y-8 pb-12 min-h-screen">
+      <div className="relative pt-12 pb-6 px-6 -mx-6 bg-gray-50 border-b border-editorial-divider">
+        <div className="max-w-2xl">
+          <h1 className="text-4xl md:text-5xl font-serif mb-4 text-editorial-text">
+            Explore Trending
+          </h1>
+          <p className="text-lg text-editorial-text-muted leading-relaxed">
+            Curated picks from top retailers just for you. Hand-selected for the
+            best vibes and value.
+          </p>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {TRENDING_ITEMS.map((item) => (
-          <ProductCard key={item.id} {...item} />
-        ))}
+      {/* Sticky Filter Bar */}
+      <div className="sticky top-14 z-40 bg-white/80 backdrop-blur-md border-b border-gray-100 py-3 -mx-4 px-4 md:px-6 md:-mx-6 mb-8 overflow-x-auto no-scrollbar">
+        <div className="flex items-center gap-3 min-w-max">
+          {CATEGORIES.map((category) => (
+            <button
+              key={category}
+              onClick={() => setActiveCategory(category)}
+              className={`
+                px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 border
+                ${
+                  activeCategory === category
+                    ? "bg-black text-white border-black shadow-md scale-105"
+                    : "bg-white text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+                }
+              `}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {filteredItems.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10 animate-in fade-in duration-500">
+          {filteredItems.map((item) => (
+            <ProductCard key={item.id} {...item} />
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-20 text-editorial-text-muted">
+          <p>No items found in this category.</p>
+        </div>
+      )}
+
+      {/* Load More Trigger (Visual only for now) */}
+      <div className="flex justify-center pt-12 border-t border-gray-100 mt-8">
+        <button className="px-8 py-3 bg-white border border-gray-200 text-gray-900 rounded-full font-medium hover:bg-gray-50 hover:border-black transition-all duration-300 uppercase text-xs tracking-widest shadow-sm">
+          Load More Styles
+        </button>
       </div>
     </div>
   );

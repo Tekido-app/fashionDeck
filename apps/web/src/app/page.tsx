@@ -22,6 +22,12 @@ export default function LandingPage() {
 
           <div className="hidden md:flex items-center gap-8">
             <Link
+              href="/explore"
+              className="text-sm font-medium text-editorial-text-muted hover:text-editorial-text transition-colors"
+            >
+              Explore
+            </Link>
+            <Link
               href="#how-it-works"
               className="text-sm font-medium text-editorial-text-muted hover:text-editorial-text transition-colors"
             >
@@ -64,10 +70,10 @@ export default function LandingPage() {
                 Try for free
               </Link>
               <Link
-                href="#how-it-works"
+                href="/explore"
                 className="text-sm border-b border-gray-300 pb-1 hover:border-editorial-text transition-all"
               >
-                How it works
+                Explore Trending
               </Link>
             </div>
 
@@ -228,7 +234,7 @@ export default function LandingPage() {
 
         <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-6 md:gap-8">
           {/* Card 1 */}
-          <Link href="/app" className="group cursor-pointer block">
+          <Link href="/explore" className="group cursor-pointer block">
             <div className="aspect-[4/5] bg-gray-100 relative mb-4 overflow-hidden">
               <Image
                 src="/outfit-korean.jpg"
@@ -253,7 +259,7 @@ export default function LandingPage() {
           </Link>
 
           {/* Card 2 */}
-          <Link href="/app" className="group cursor-pointer block">
+          <Link href="/explore" className="group cursor-pointer block">
             <div className="aspect-[4/5] bg-gray-100 relative mb-4 overflow-hidden">
               <Image
                 src="/outfit-streetwear.jpg"
@@ -278,7 +284,7 @@ export default function LandingPage() {
           </Link>
 
           {/* Card 3 */}
-          <Link href="/app" className="group cursor-pointer block">
+          <Link href="/explore" className="group cursor-pointer block">
             <div className="aspect-[4/5] bg-gray-100 relative mb-4 overflow-hidden">
               <Image
                 src="/outfit-vintage.jpg"

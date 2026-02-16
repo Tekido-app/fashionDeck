@@ -59,14 +59,28 @@ module.exports = {
         vibrant:
           "0 10px 15px -3px rgba(14, 165, 233, 0.2), 0 4px 6px -4px rgba(14, 165, 233, 0.1)",
       },
-      keyframes: {
-        marquee: {
-          "0%": { transform: "translateX(0%)" },
-          "100%": { transform: "translateX(-100%)" },
-        },
+      marquee: "marquee 25s linear infinite",
+      runway: "runway 1.5s linear infinite",
+      scanner: "scanner 2s ease-in-out infinite",
+      popup: "popup 0.5s ease-out forwards",
+    },
+    keyframes: {
+      marquee: {
+        "0%": { transform: "translateX(0%)" },
+        "100%": { transform: "translateX(-100%)" },
       },
-      animation: {
-        marquee: "marquee 25s linear infinite",
+      runway: {
+        "0%": { backgroundPosition: "0 0" },
+        "100%": { backgroundPosition: "0 40px" },
+      },
+      scanner: {
+        "0%": { top: "0%" },
+        "50%": { top: "100%" },
+        "100%": { top: "0%" },
+      },
+      popup: {
+        "0%": { opacity: "0", transform: "scale(0.9) translateY(20px)" },
+        "100%": { opacity: "1", transform: "scale(1) translateY(0)" },
       },
     },
   },

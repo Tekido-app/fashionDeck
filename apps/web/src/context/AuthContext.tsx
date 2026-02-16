@@ -7,7 +7,27 @@ interface User {
   id: string;
   name: string;
   email: string;
+  location?: string;
   avatar?: string;
+  preferences?: {
+    styles?: string[];
+    sizes?: {
+      tops?: string;
+      bottoms?: string;
+      shoes?: string;
+    };
+  };
+  settings?: {
+    notifications?: {
+      email?: boolean;
+      push?: boolean;
+      marketing?: boolean;
+    };
+    privacy?: {
+      publicProfile?: boolean;
+      showActivity?: boolean;
+    };
+  };
 }
 
 interface AuthContextType {
@@ -16,6 +36,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   signup: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
+  updateProfile: (data: Partial<User>) => Promise<void>;
   isLoading: boolean;
 }
 
@@ -73,6 +94,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     router.push("/login");
   };
 
+  const updateProfile = async (data: Partial<User>) => {
+    if (!user) return;
+
+    const updatedUser = { ...user, ...data };
+    setUser(updatedUser);
+    localStorage.setItem("fashiondeck_user", JSON.stringify(updatedUser));
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -81,6 +110,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         login,
         signup,
         logout,
+        updateProfile,
         isLoading,
       }}
     >
