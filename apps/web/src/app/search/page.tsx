@@ -323,7 +323,10 @@ export default function SearchPage() {
                     className="animate-in fade-in slide-in-from-bottom-8 duration-700"
                     style={{ animationDelay: `${idx * 150}ms` }}
                   >
-                    <OutfitCard outfit={outfit} />
+                    <OutfitCard
+                      outfit={outfit}
+                      onViewDetails={() => console.log("View details", outfit)}
+                    />
                   </div>
                 ))}
               </div>
