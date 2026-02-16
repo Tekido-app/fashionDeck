@@ -60,12 +60,12 @@ export default function EmptyState({
         <div className="w-full max-w-4xl space-y-12">
           {/* Heading */}
           <div className="text-center space-y-4">
-            <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl leading-tight tracking-tight">
-              Describe the vibe you're shopping for
+            <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl leading-tight tracking-tight text-shadow">
+              Describe the vibe you&apos;re shopping for
             </h1>
-            <p className="text-lg md:text-xl text-editorial-text-muted max-w-2xl mx-auto">
-              Tell us what you're looking for in plain English. We'll find and
-              combine the perfect pieces.
+            <p className="text-lg md:text-xl text-shadow-muted max-w-2xl mx-auto">
+              Tell us what you&apos;re looking for in plain English. We&apos;ll
+              find and combine the perfect pieces.
             </p>
           </div>
 
