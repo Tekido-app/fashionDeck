@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { ChevronDown, ArrowRight, Instagram, Twitter } from "lucide-react";
+import { Logo } from "@/components/Logo";
 
 export default function LandingPage() {
   return (
@@ -12,11 +13,8 @@ export default function LandingPage() {
       <nav className="sticky top-0 z-50 bg-editorial-white/90 backdrop-blur-md border-b border-editorial-divider transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 md:px-6 h-14 md:h-16 flex items-center justify-between">
           <div className="flex items-center gap-8">
-            <Link
-              href="/"
-              className="font-serif text-2xl tracking-tight font-medium hover:opacity-80 transition-opacity"
-            >
-              FashionDeck
+            <Link href="/" className="hover:opacity-80 transition-opacity">
+              <Logo variant="light" />
             </Link>
           </div>
 

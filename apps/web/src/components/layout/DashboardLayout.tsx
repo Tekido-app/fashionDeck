@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
+import { Logo } from "../Logo";
 import { useAuth } from "@/context/AuthContext";
 
 interface DashboardLayoutProps {
@@ -30,7 +31,13 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     return (
       <div className="min-h-screen bg-[#F3F4F6] flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 bg-black rounded-2xl mx-auto mb-4 animate-pulse"></div>
+          <div className="flex justify-center mb-4">
+            <Logo
+              variant="light"
+              showText={false}
+              className="scale-150 animate-pulse"
+            />
+          </div>
           <p className="text-gray-500">Loading...</p>
         </div>
       </div>

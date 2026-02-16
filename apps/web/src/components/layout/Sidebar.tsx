@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, Compass, User, LayoutGrid, LogOut } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { Logo } from "../Logo";
 
 const navigation = [
   { name: "Home", href: "/app", icon: Home },
@@ -17,13 +18,8 @@ export function Sidebar() {
 
   return (
     <div className="fixed left-4 top-4 bottom-4 w-20 md:w-64 bg-black text-white rounded-2xl flex flex-col p-4 shadow-2xl z-50">
-      <div className="flex items-center justify-center md:justify-start gap-3 p-2 mb-8">
-        <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-black font-bold text-xl">
-          F.
-        </div>
-        <span className="font-bold text-xl hidden md:block tracking-wide">
-          FashionDeck
-        </span>
+      <div className="flex items-center justify-center md:justify-start p-2 mb-8">
+        <Logo variant="dark" />
       </div>
 
       <nav className="flex-1 space-y-2">

@@ -8,6 +8,7 @@
 
 import Link from "next/link";
 import StyleInput from "./StyleInput";
+import { Logo } from "@/components/Logo";
 
 interface EmptyStateProps {
   query: string;
@@ -40,11 +41,8 @@ export default function EmptyState({
       {/* Minimal Top Nav */}
       <nav className="border-b border-editorial-divider bg-white">
         <div className="max-w-7xl mx-auto px-4 md:px-6 h-14 md:h-16 flex items-center justify-between">
-          <Link
-            href="/"
-            className="font-serif text-xl md:text-2xl tracking-tight font-medium hover:opacity-80 transition-opacity"
-          >
-            FashionDeck
+          <Link href="/" className="hover:opacity-80 transition-opacity">
+            <Logo variant="light" className="h-8" />
           </Link>
           <Link
             href="/"

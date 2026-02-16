@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Sparkles, ScanLine, Box, Tag } from "lucide-react";
+import { Logo } from "@/components/Logo";
 
 const PROGRESS_MESSAGES = [
   "Analyzing your vibe...",
@@ -40,9 +41,9 @@ export default function LoadingState() {
         <div className="max-w-7xl mx-auto px-4 md:px-6 h-14 md:h-16 flex items-center justify-between">
           <Link
             href="/"
-            className="font-serif text-xl md:text-2xl tracking-tight font-medium opacity-50"
+            className="opacity-50 hover:opacity-100 transition-opacity"
           >
-            FashionDeck
+            <Logo variant="light" className="h-8" />
           </Link>
         </div>
       </nav>

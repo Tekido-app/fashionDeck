@@ -10,6 +10,7 @@ import Link from "next/link";
 import { Outfit } from "@fashiondeck/types";
 import StyleInput from "./StyleInput";
 import OutfitCard from "./OutfitCard";
+import { Logo } from "./Logo";
 
 interface ResultsViewProps {
   query: string;
@@ -38,9 +39,9 @@ export default function ResultsView({
           <div className="flex items-center gap-4">
             <Link
               href="/"
-              className="font-serif text-xl md:text-2xl tracking-tight font-medium hover:opacity-80 transition-opacity flex-shrink-0"
+              className="hover:opacity-80 transition-opacity flex-shrink-0"
             >
-              FashionDeck
+              <Logo variant="light" className="h-8" />
             </Link>
             <div className="flex-1">
               <StyleInput
